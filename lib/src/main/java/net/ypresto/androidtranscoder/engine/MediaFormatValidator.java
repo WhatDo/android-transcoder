@@ -16,6 +16,7 @@
 package net.ypresto.androidtranscoder.engine;
 
 import android.media.MediaFormat;
+import android.util.Log;
 
 import net.ypresto.androidtranscoder.format.MediaFormatExtraConstants;
 import net.ypresto.androidtranscoder.utils.AvcCsdUtils;
@@ -37,7 +38,8 @@ class MediaFormatValidator {
         ByteBuffer spsBuffer = AvcCsdUtils.getSpsBuffer(format);
         byte profileIdc = AvcSpsUtils.getProfileIdc(spsBuffer);
         if (profileIdc != PROFILE_IDC_BASELINE) {
-            throw new InvalidOutputFormatException("Non-baseline AVC video profile is not supported by Android OS, actual profile_idc: " + profileIdc);
+            Log.d("MediaFormatValidator", "profile_idc is not equal to the BASELINE(66), but is " + profileIdc);
+//            throw new InvalidOutputFormatException("Non-baseline AVC video profile is not supported by Android OS, actual profile_idc: " + profileIdc);
         }
     }
 

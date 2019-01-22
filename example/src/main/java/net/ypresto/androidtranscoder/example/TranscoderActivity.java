@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.Menu;
@@ -29,6 +30,7 @@ public class TranscoderActivity extends Activity {
     private static final String TAG = "TranscoderActivity";
     private static final String FILE_PROVIDER_AUTHORITY = "net.ypresto.androidtranscoder.example.fileprovider";
     private static final int REQUEST_CODE_PICK = 1;
+    private static final int REQUEST_VIDEO_CAPTURE = 2;
     private static final int PROGRESS_BAR_MAX = 1000;
     private Future<Void> mFuture;
 
@@ -42,6 +44,15 @@ public class TranscoderActivity extends Activity {
                 startActivityForResult(new Intent(Intent.ACTION_GET_CONTENT).setType("video/*"), REQUEST_CODE_PICK);
             }
         });
+        findViewById(R.id.record_video_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
+                }
+            }
+        });
         findViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,6 +64,7 @@ public class TranscoderActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
+            case REQUEST_VIDEO_CAPTURE:
             case REQUEST_CODE_PICK: {
                 final File file;
                 if (resultCode == RESULT_OK) {
